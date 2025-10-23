@@ -1,8 +1,8 @@
 package br.com.postech.techchallange_order.domain.ports.in;
 
-import br.com.postech.techchallange_order.domain.model.Checkout;
 import br.com.postech.techchallange_order.infrastructure.adapters.in.rest.dto.CheckoutRequest;
+import br.com.postech.techchallange_order.infrastructure.adapters.in.rest.dto.response.CheckoutResponse;
 
 public interface CheckouUseCase {
-	Checkout processarCheckout(CheckoutRequest request);
+	CheckoutResponse processarCheckout(CheckoutRequest request);
 }

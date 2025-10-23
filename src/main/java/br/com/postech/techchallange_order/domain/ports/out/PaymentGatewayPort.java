@@ -1,9 +1,9 @@
 package br.com.postech.techchallange_order.domain.ports.out;
 
-import br.com.postech.techchallange_order.domain.model.Checkout;
+import br.com.postech.techchallange_order.infrastructure.adapters.in.rest.dto.response.CheckoutResponse;
 
 public interface PaymentGatewayPort {
-	Checkout processPayment(Checkout checkout);
+	CheckoutResponse processPayment(CheckoutResponse checkout);
 
-	Checkout getPaymentStatus(Long paymentId);
+	CheckoutResponse getPaymentStatus(Long paymentId);
 }
