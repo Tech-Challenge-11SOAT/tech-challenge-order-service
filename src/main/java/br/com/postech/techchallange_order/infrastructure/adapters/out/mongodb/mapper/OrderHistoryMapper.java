@@ -1,5 +1,7 @@
 package br.com.postech.techchallange_order.infrastructure.adapters.out.mongodb.mapper;
 
+import java.time.Instant;
+
 import org.bson.types.ObjectId;
 
 import br.com.postech.techchallange_order.domain.model.Order;
@@ -31,6 +33,8 @@ public final class OrderHistoryMapper {
 			ps.setName(previousStatus.getName());
 			doc.setPreviousStatus(ps);
 		}
+
+		doc.setCreatedAt(Instant.now());
 		return doc;
 	}
 }

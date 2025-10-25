@@ -30,29 +30,29 @@ public class PaymentTransactionDocument {
 	@Id
 	private ObjectId id;
 
-	@Field("order_id")
+	@Field("orderId")
 	private ObjectId orderId;
 
-	@Field("transaction_id")
+	@Field("transactionId")
 	private String transactionId;
 
 	@Field("amount")
 	private Decimal128 amount;
 
-	@Field("payment_method")
+	@Field("paymentMethod")
 	private String paymentMethod;
 
 	@Field("status")
 	private String status;
 
-	@Field("gateway_response")
+	@Field("gatewayResponse")
 	private Map<String, Object> gatewayResponse;
 
 	@CreatedDate
-	@Field("created_at")
+	@Field("createdAt")
 	private Instant createdAt;
 
 	@LastModifiedDate
-	@Field("updated_at")
+	@Field("updatedAt")
 	private Instant updatedAt;
 }

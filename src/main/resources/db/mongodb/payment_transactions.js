@@ -5,14 +5,10 @@ db.createCollection("payment_transactions", {
     $jsonSchema: {
       bsonType: "object",
       required: [
-        "orderId",
-        "transactionId",
         "amount",
         "paymentMethod",
         "status",
-        "gatewayResponse",
-        "createdAt",
-        "updatedAt",
+        "createdAt"
       ],
       properties: {
         _id: {
