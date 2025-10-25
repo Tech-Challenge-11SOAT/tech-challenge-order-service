@@ -3,4 +3,4 @@ spring:
     name: techchallange-order
   data:
     mongodb:
-      uri: mongodb+srv://db_user:Vv0ULDKmlL7VJ0hL@order.fhyukuw.mongodb.net/?appName=Order
+      uri: ${MONGODB_URI:mongodb://localhost:27017/techchallenge-order}
