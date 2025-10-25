@@ -26,7 +26,7 @@ public class PaymentService implements PaymentUseCase {
 
 	@Override
 	public void processPaymentTransaction(PaymentTransaction transaction) {
-		this.paymentTransactionUseCase.processPaymentTransaction(transaction);
+		this.paymentTransactionUseCase.createPaymentTransaction(transaction);
 
 		// only create queue when payment is FINALIZADO
 		if (transaction.getStatus() != null
