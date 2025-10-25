@@ -4,12 +4,9 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import br.com.postech.techchallange_order.domain.model.Order;
-import br.com.postech.techchallange_order.domain.ports.out.OrderRepositoryPort;
 
 @Repository
-public interface MongoOrderRepository extends MongoRepository<Order, String>, OrderRepositoryPort {
-	@Override
-	default Order save(Order order) {
-		return this.save(order);
-	}
+public interface MongoOrderRepository extends MongoRepository<Order, String> {
+	// Spring Data provides save implementations; do not expose OrderRepositoryPort
+	// here
 }
