@@ -1,6 +1,13 @@
+server:
+  port: 8081
+
 spring:
   application:
     name: techchallange-order
   data:
     mongodb:
       uri: ${MONGODB_URI:mongodb://localhost:27017/techchallenge-order}
+
+mongodb:
+  uri: ${MONGODB_URI:mongodb://localhost:27017/techchallenge-order}
+  database: ${MONGODB_DATABASE:tc-order}
