@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -13,6 +14,7 @@ import com.mongodb.client.MongoClients;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
+@EnableMongoRepositories(basePackages = "br.com.postech.techchallange_order.infrastructure.adapters.out.persistence")
 @RequiredArgsConstructor
 public class MongoConfig {
 
