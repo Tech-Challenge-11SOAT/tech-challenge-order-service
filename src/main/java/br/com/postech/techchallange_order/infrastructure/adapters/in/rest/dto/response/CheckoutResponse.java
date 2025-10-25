@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CheckoutResponse {
-	private Long idPedido;
+	private String idPedido;
 	private Long idPagamento;
 	private String metodoPagamento;
 	private String status;

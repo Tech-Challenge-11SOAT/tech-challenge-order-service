@@ -1,5 +1,6 @@
 package br.com.postech.techchallange_order.infrastructure.adapters.in.rest.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
@@ -45,6 +46,7 @@ public class CheckoutRequest {
 		private Long idProduto;
 		@NotNull
 		private Integer quantidade;
+		private BigDecimal precoUnitario;
 
 		public Long getIdProduto() {
 			return idProduto;
@@ -61,5 +63,14 @@ public class CheckoutRequest {
 		public void setQuantidade(Integer quantidade) {
 			this.quantidade = quantidade;
 		}
+
+		public BigDecimal getPrecoUnitario() {
+			return precoUnitario;
+		}
+
+		public void setPrecoUnitario(BigDecimal precoUnitario) {
+			this.precoUnitario = precoUnitario;
+		}
+
 	}
 }

@@ -122,7 +122,7 @@ public final class OrderMapper {
 							: null);
 			p.setPaymentMethod(doc.getPayment().getPaymentMethod());
 			if (doc.getPayment().getStatus() != null) {
-				Order.PaymentStatus ps = new Order.PaymentStatus();
+				Order.Payment.PaymentStatus ps = new Order.Payment.PaymentStatus();
 				ps.setId(doc.getPayment().getStatus().getId());
 				ps.setName(doc.getPayment().getStatus().getName());
 				p.setStatus(ps);
