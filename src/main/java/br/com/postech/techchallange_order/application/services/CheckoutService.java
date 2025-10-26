@@ -11,6 +11,7 @@ import br.com.postech.techchallange_order.domain.ports.in.CheckouUseCase;
 import br.com.postech.techchallange_order.domain.ports.in.OrderStatusHistoryUseCase;
 import br.com.postech.techchallange_order.domain.ports.in.OrderUseCase;
 import br.com.postech.techchallange_order.domain.ports.in.PaymentTransactionUseCase;
+import br.com.postech.techchallange_order.domain.ports.out.OrderRepositoryPort;
 import br.com.postech.techchallange_order.infrastructure.adapters.in.rest.dto.CheckoutRequest;
 import br.com.postech.techchallange_order.infrastructure.adapters.in.rest.dto.response.CheckoutResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ public class CheckoutService implements CheckouUseCase {
 	private final OrderUseCase orderUseCase;
 	private final OrderStatusHistoryUseCase orderStatusHistoryUseCase;
 	private final PaymentTransactionUseCase paymentTransactionUseCase;
+	private final MercadoPagoService mercadoPagoService;
+	private final OrderRepositoryPort orderRepository;
 
 	@Override
 	public CheckoutResponse processarCheckout(CheckoutRequest request) {
@@ -30,9 +33,21 @@ public class CheckoutService implements CheckouUseCase {
 		this.processTransaction(order);
 		this.recordOrderStatusHistory(order);
 
+		// integração com o MercadoPago
+		Order updatedOrder = this.mercadoPagoService.processPaymentWithMercadoPago(order);
+
+		// Salvar pedido atualizado com informações do MercadoPago
+		updatedOrder = this.orderRepository.save(updatedOrder);
+
 		CheckoutResponse response = new CheckoutResponse();
-		response.setIdPedido(order.getId());
-		response.setStatus(order.getStatus().getName());
+		response.setIdPedido(updatedOrder.getId());
+		response.setStatus(updatedOrder.getStatus().getName());
+
+		// Adicionar informações do MercadoPago à resposta, se disponíveis
+		if (updatedOrder.getPayment() != null && updatedOrder.getPayment().getMercadoPagoInfo() != null) {
+			response.setQrCode(updatedOrder.getPayment().getMercadoPagoInfo().getQrCode());
+			response.setQrCodeBase64(updatedOrder.getPayment().getMercadoPagoInfo().getQrCodeBase64());
+		}
 
 		return response;
 	}

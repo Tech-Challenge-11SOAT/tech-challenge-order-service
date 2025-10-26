@@ -15,4 +15,6 @@ public class CheckoutResponse {
 	private String status;
 	private Integer numeroPedido;
 	private OrderResponseDTO orderResponse;
+	private String qrCode;
+	private String qrCodeBase64;
 }
