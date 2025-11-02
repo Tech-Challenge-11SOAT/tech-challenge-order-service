@@ -21,7 +21,7 @@ cors:
 
 customer:
   service:
-    url: ${CUSTOMER_SERVICE_URL:http://localhost:8082}
+    url: ${CUSTOMER_SERVICE_URL:http://localhost:8080}
 
 jwt:
   secret: ${JWT_SECRET:palmeirasNaoTemMundialVitorNhoqueEMuitoBagreVaiCorinthians2012}
@@ -37,5 +37,5 @@ mercadopago:
     pos-id: ${MERCADOPAGO_POS_ID:SUC001POS001}
     timeout: ${MERCADOPAGO_TIMEOUT:30000}
   options:
-    test-mode: true
-    integration-active: false
+    test-mode: false
+    integration-active: true

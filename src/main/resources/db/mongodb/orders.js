@@ -24,7 +24,7 @@ db.createCollection("orders", {
           description: "ID do pedido legado (para compatibilidade)",
         },
         customerId: {
-          bsonType: "long",
+          bsonType: "string",
           description: "ID do cliente",
         },
         orderDate: {

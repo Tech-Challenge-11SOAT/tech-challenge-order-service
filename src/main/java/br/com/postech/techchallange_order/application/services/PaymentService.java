@@ -32,7 +32,7 @@ public class PaymentService implements PaymentUseCase {
 		if (transaction.getStatus() != null
 				&& StatusPagamentoEnum.FINALIZADO.getStatus().equalsIgnoreCase(transaction.getStatus())) {
 
-			Long customerId = null;
+			String customerId = null;
 			try {
 				if (transaction.getOrderId() != null) {
 					ObjectId oid = new ObjectId(transaction.getOrderId());

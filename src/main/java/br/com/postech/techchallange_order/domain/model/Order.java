@@ -8,7 +8,7 @@ import java.util.List;
 public class Order {
 	private String id;
 	private Long orderId;
-	private Long customerId;
+	private String customerId;
 	private Instant orderDate;
 	private Status status;
 	private Integer queuePosition;
@@ -20,7 +20,7 @@ public class Order {
 	public Order() {
 	}
 
-	public Order(String id, Long orderId, Long customerId, Instant orderDate, Status status, Integer queuePosition,
+	public Order(String id, Long orderId, String customerId, Instant orderDate, Status status, Integer queuePosition,
 			List<Item> items, Payment payment, Instant createdAt, Instant updatedAt) {
 		this.id = id;
 		this.orderId = orderId;
@@ -50,11 +50,11 @@ public class Order {
 		this.orderId = orderId;
 	}
 
-	public Long getCustomerId() {
+	public String getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(Long customerId) {
+	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
 

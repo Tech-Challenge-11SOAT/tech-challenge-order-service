@@ -23,7 +23,7 @@ public class OrderDocument {
 	private ObjectId id;
 
 	private Long orderId;
-	private Long customerId;
+	private String customerId;
 	private Instant orderDate;
 
 	private Status status;

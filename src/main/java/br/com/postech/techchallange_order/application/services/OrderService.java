@@ -26,6 +26,7 @@ public class OrderService implements OrderUseCase {
 		this.validateRequest(request);
 
 		Order order = new Order();
+		order.setOrderId(System.currentTimeMillis()); // Gera um ID sequencial baseado em timestamp
 		order.setCustomerId(request.getIdCliente());
 		order.setOrderDate(Instant.now());
 		order.setItems(this.mapItems(request));
@@ -45,6 +46,9 @@ public class OrderService implements OrderUseCase {
 					item.setProductId(itemReq.getIdProduto());
 					item.setQuantity(itemReq.getQuantidade());
 					item.setUnitPrice(itemReq.getPrecoUnitario());
+					// Calcula o subtotal: quantidade * preço unitário
+					BigDecimal subtotal = itemReq.getPrecoUnitario().multiply(new BigDecimal(itemReq.getQuantidade()));
+					item.setSubtotal(subtotal);
 					return item;
 				})
 				.toList();
@@ -52,11 +56,13 @@ public class OrderService implements OrderUseCase {
 
 	private Order.Payment mapPayment(CheckoutRequest request) {
 		Order.Payment payment = new Order.Payment();
+		payment.setPaymentId(System.currentTimeMillis());
 		payment.setPaymentMethod(request.getMetodoPagamento());
 		payment.setTotalAmount(this.calcularTotalPedido(request.getProdutos()));
-		payment.setPaymentDate(null);
+		payment.setPaymentDate(Instant.now());
 
 		Order.Payment.PaymentStatus status = new Order.Payment.PaymentStatus();
+		status.setId(1L);
 		status.setName(StatusPagamentoEnum.PENDENTE.getStatus());
 
 		payment.setStatus(status);
@@ -88,6 +94,7 @@ public class OrderService implements OrderUseCase {
 
 	private Order.Status mapStatus() {
 		Order.Status newStatus = new Order.Status();
+		newStatus.setId(1L); // ID do status RECEBIDO
 		newStatus.setName(StatusPedidoEnum.RECEBIDO.getStatus());
 		newStatus.setUpdatedAt(Instant.now());
 		return newStatus;

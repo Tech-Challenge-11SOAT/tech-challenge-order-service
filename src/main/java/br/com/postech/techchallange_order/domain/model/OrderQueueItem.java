@@ -5,14 +5,14 @@ import java.time.Instant;
 public class OrderQueueItem {
 	private String id;
 	private String orderId;
-	private Long customerId; // nullable for anonymous
+	private String customerId; // nullable for anonymous
 	private Instant createdAt;
 	private String status;
 
 	public OrderQueueItem() {
 	}
 
-	public OrderQueueItem(String id, String orderId, Long customerId, Instant createdAt, String status) {
+	public OrderQueueItem(String id, String orderId, String customerId, Instant createdAt, String status) {
 		this.id = id;
 		this.orderId = orderId;
 		this.customerId = customerId;
@@ -36,11 +36,11 @@ public class OrderQueueItem {
 		this.orderId = orderId;
 	}
 
-	public Long getCustomerId() {
+	public String getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(Long customerId) {
+	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
 	}
 

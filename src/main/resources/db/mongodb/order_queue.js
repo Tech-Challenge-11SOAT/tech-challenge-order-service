@@ -15,7 +15,7 @@ db.createCollection("order_queue", {
           description: "Referência ao _id do pedido"
         },
         customerId: {
-          bsonType: "long",
+          bsonType: "string",
           description: "ID do cliente associado"
         },
         createdAt: {

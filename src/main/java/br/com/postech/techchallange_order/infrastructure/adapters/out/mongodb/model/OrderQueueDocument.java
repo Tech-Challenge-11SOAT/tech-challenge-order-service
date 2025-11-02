@@ -20,7 +20,7 @@ public class OrderQueueDocument {
 	private ObjectId id;
 
 	private ObjectId orderId;
-	private Long customerId;
+	private String customerId;
 
 	@CreatedDate
 	private Instant createdAt;

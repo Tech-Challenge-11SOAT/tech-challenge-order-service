@@ -8,18 +8,18 @@ import lombok.EqualsAndHashCode;
 
 public class CheckoutRequest {
 
-	private Long idCliente;
+	private String idCliente;
 
 	@NotNull
 	private List<ItemProduto> produtos;
 
 	private String metodoPagamento;
 
-	public Long getIdCliente() {
+	public String getIdCliente() {
 		return idCliente;
 	}
 
-	public void setIdCliente(Long idCliente) {
+	public void setIdCliente(String idCliente) {
 		this.idCliente = idCliente;
 	}
 
