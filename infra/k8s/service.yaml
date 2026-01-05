@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tech-challenge-order-service # ALTERAR
+  namespace: techchallenge
+  labels:
+    app: tech-challenge-order-service # ALTERAR
+spec:
+  selector:
+    app: tech-challenge-order-service # ALTERAR
+  ports:
+    - name: http
+      port: 8081
+      targetPort: 8081
+  type: ClusterIP
