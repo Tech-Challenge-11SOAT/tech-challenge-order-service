@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tech-challenge-order-service # ALTERAR
+  name: tech-challenge-order-service
   namespace: techchallenge
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: order-service # ALTERAR
+      app: order-service
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -16,19 +16,19 @@ spec:
   template:
     metadata:
       labels:
-        app: order-service # ALTERAR
+        app: order-service
     spec:
       containers:
-        - name: order-service # ALTERAR
-          image: nicolasmartinss/order-service:${{ github.sha }} # ALTERAR
+        - name: order-service
+          image: nicolasmartinss/order-service:${{ github.sha }}
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
           envFrom:
             - configMapRef:
-                name: order-service-config # ALTERAR
+                name: order-service-config
             - secretRef:
-                name: order-service-secret # ALTERAR
+                name: order-service-secret
           resources:
             requests:
               cpu: 500m
