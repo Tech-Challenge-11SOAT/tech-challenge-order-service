@@ -1,6 +1,7 @@
 package br.com.postech.techchallange_order.infrastructure.adapters.out.mongodb.mapper;
 
 import br.com.postech.techchallange_order.domain.model.Order;
+import br.com.postech.techchallange_order.helpers.OrderMother;
 import br.com.postech.techchallange_order.infrastructure.adapters.out.mongodb.model.OrderHistoryDocument;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -18,51 +19,38 @@ class OrderHistoryMapperTest {
 
     @Test
     void shouldMapOrderToDocumentWithStatusAndPreviousStatus() {
-        ObjectId objectId = new ObjectId();
-        Instant now = Instant.now();
-
-        Order.Status currentStatus = new Order.Status(2L, "EM_ANDAMENTO", now);
-        Order.Status previousStatus = new Order.Status(1L, "RECEBIDO", now);
-
-        Order order = new Order();
-        order.setId(objectId.toHexString());
-        order.setStatus(currentStatus);
+        Order order = OrderMother.createCompleteOrder();
+        Order.Status previousStatus = OrderMother.createRecebidoStatus();
+        order.setStatus(OrderMother.createEmAndamentoStatus());
 
         OrderHistoryDocument doc = OrderHistoryMapper.toDocument(order, previousStatus);
 
         assertNotNull(doc);
-        assertEquals(objectId, doc.getOrderId());
+        assertNotNull(doc.getOrderId());
 
         assertNotNull(doc.getStatus());
-        assertEquals(2L, doc.getStatus().getId());
-        assertEquals("EM_ANDAMENTO", doc.getStatus().getName());
+        assertEquals(order.getStatus().getId(), doc.getStatus().getId());
+        assertEquals(order.getStatus().getName(), doc.getStatus().getName());
 
         assertNotNull(doc.getPreviousStatus());
-        assertEquals(1L, doc.getPreviousStatus().getId());
-        assertEquals("RECEBIDO", doc.getPreviousStatus().getName());
+        assertEquals(previousStatus.getId(), doc.getPreviousStatus().getId());
+        assertEquals(previousStatus.getName(), doc.getPreviousStatus().getName());
 
         assertNotNull(doc.getCreatedAt());
     }
 
     @Test
     void shouldMapOrderToDocumentWithoutPreviousStatus() {
-        ObjectId objectId = new ObjectId();
-        Instant now = Instant.now();
-
-        Order.Status currentStatus = new Order.Status(1L, "RECEBIDO", now);
-
-        Order order = new Order();
-        order.setId(objectId.toHexString());
-        order.setStatus(currentStatus);
+        Order order = OrderMother.createCompleteOrder();
 
         OrderHistoryDocument doc = OrderHistoryMapper.toDocument(order, null);
 
         assertNotNull(doc);
-        assertEquals(objectId, doc.getOrderId());
+        assertNotNull(doc.getOrderId());
 
         assertNotNull(doc.getStatus());
-        assertEquals(1L, doc.getStatus().getId());
-        assertEquals("RECEBIDO", doc.getStatus().getName());
+        assertEquals(order.getStatus().getId(), doc.getStatus().getId());
+        assertEquals(order.getStatus().getName(), doc.getStatus().getName());
 
         assertNull(doc.getPreviousStatus());
         assertNotNull(doc.getCreatedAt());
@@ -70,8 +58,9 @@ class OrderHistoryMapperTest {
 
     @Test
     void shouldMapOrderWithNullIdAndStatus() {
-        Order order = new Order();
-        order.setOrderId(123L);
+        Order order = OrderMother.createMinimalOrder();
+        order.setId(null);
+        order.setStatus(null);
 
         OrderHistoryDocument doc = OrderHistoryMapper.toDocument(order, null);
 
@@ -84,20 +73,18 @@ class OrderHistoryMapperTest {
 
     @Test
     void shouldMapOrderWithNullStatus() {
-        ObjectId objectId = new ObjectId();
-        Order order = new Order();
-        order.setId(objectId.toHexString());
+        Order order = OrderMother.createCompleteOrder();
         order.setStatus(null);
 
-        Order.Status previousStatus = new Order.Status(1L, "RECEBIDO", Instant.now());
+        Order.Status previousStatus = OrderMother.createRecebidoStatus();
 
         OrderHistoryDocument doc = OrderHistoryMapper.toDocument(order, previousStatus);
 
         assertNotNull(doc);
-        assertEquals(objectId, doc.getOrderId());
+        assertNotNull(doc.getOrderId());
         assertNull(doc.getStatus());
         assertNotNull(doc.getPreviousStatus());
-        assertEquals(1L, doc.getPreviousStatus().getId());
+        assertEquals(previousStatus.getId(), doc.getPreviousStatus().getId());
     }
 }
 

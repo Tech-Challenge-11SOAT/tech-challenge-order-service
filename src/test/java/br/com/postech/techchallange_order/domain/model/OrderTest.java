@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +28,7 @@ class OrderTest {
         Instant now = Instant.now();
         Order.Status status = new Order.Status(1L, "RECEBIDO", now);
         Order.Item item = new Order.Item(1L, 2, BigDecimal.TEN, BigDecimal.valueOf(20));
-        List<Order.Item> items = Arrays.asList(item);
+        List<Order.Item> items = Collections.singletonList(item);
         Order.Payment payment = new Order.Payment();
 
         Order order = new Order("123", 456L, "customer1", now, status, 1, items, payment, now, now);
@@ -97,7 +97,7 @@ class OrderTest {
     void shouldSetAndGetItems() {
         Order order = new Order();
         Order.Item item = new Order.Item(1L, 3, BigDecimal.valueOf(15), BigDecimal.valueOf(45));
-        List<Order.Item> items = Arrays.asList(item);
+        List<Order.Item> items = Collections.singletonList(item);
         order.setItems(items);
 
         assertEquals(1, order.getItems().size());

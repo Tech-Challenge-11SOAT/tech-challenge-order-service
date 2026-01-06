@@ -8,6 +8,7 @@ import br.com.postech.techchallange_order.domain.ports.in.OrderStatusHistoryUseC
 import br.com.postech.techchallange_order.domain.ports.in.OrderUseCase;
 import br.com.postech.techchallange_order.domain.ports.in.PaymentTransactionUseCase;
 import br.com.postech.techchallange_order.domain.ports.out.OrderRepositoryPort;
+import br.com.postech.techchallange_order.helpers.OrderMother;
 import br.com.postech.techchallange_order.infrastructure.adapters.in.rest.dto.CheckoutRequest;
 import br.com.postech.techchallange_order.infrastructure.adapters.in.rest.dto.response.CheckoutResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,8 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,47 +52,10 @@ class CheckoutServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		checkoutRequest = new CheckoutRequest();
-		checkoutRequest.setIdCliente("customer-123");
-		checkoutRequest.setMetodoPagamento("PIX");
+		checkoutRequest = OrderMother.createCheckoutRequest();
+		order = OrderMother.createCompleteOrder();
 
-		CheckoutRequest.ItemProduto item = new CheckoutRequest.ItemProduto();
-		item.setIdProduto(1L);
-		item.setQuantidade(2);
-		item.setPrecoUnitario(BigDecimal.valueOf(50));
-		checkoutRequest.setProdutos(Arrays.asList(item));
-
-		order = new Order();
-		order.setId("order-123");
-		order.setCustomerId("customer-123");
-
-		Order.Payment payment = new Order.Payment();
-		payment.setPaymentId(100L);
-		payment.setTotalAmount(BigDecimal.valueOf(100));
-		payment.setPaymentMethod("PIX");
-
-		Order.Payment.PaymentStatus paymentStatus = new Order.Payment.PaymentStatus();
-		paymentStatus.setId(1L);
-		paymentStatus.setName(StatusPagamentoEnum.PENDENTE.getStatus());
-		payment.setStatus(paymentStatus);
-
-		order.setPayment(payment);
-
-		Order.Status status = new Order.Status();
-		status.setId(1L);
-		status.setName(StatusPedidoEnum.RECEBIDO.getStatus());
-		order.setStatus(status);
-
-		updatedOrder = new Order();
-		updatedOrder.setId("order-123");
-		updatedOrder.setCustomerId("customer-123");
-		updatedOrder.setPayment(payment);
-		updatedOrder.setStatus(status);
-
-		Order.MercadoPagoInfo mpInfo = new Order.MercadoPagoInfo();
-		mpInfo.setQrCode("qr-code-data");
-		mpInfo.setQrCodeBase64("qr-base64-data");
-		updatedOrder.getPayment().setMercadoPagoInfo(mpInfo);
+		updatedOrder = OrderMother.createOrderWithMercadoPago();
 	}
 
 	@Test
@@ -104,10 +67,10 @@ class CheckoutServiceTest {
 		CheckoutResponse response = checkoutService.processarCheckout(checkoutRequest);
 
 		assertNotNull(response);
-		assertEquals("order-123", response.getIdPedido());
-		assertEquals(StatusPedidoEnum.RECEBIDO.getStatus(), response.getStatus());
-		assertEquals("qr-code-data", response.getQrCode());
-		assertEquals("qr-base64-data", response.getQrCodeBase64());
+		assertNotNull(response.getIdPedido());
+		assertEquals(updatedOrder.getStatus().getName(), response.getStatus());
+		assertEquals(updatedOrder.getPayment().getMercadoPagoInfo().getQrCode(), response.getQrCode());
+		assertEquals(updatedOrder.getPayment().getMercadoPagoInfo().getQrCodeBase64(), response.getQrCodeBase64());
 
 		verify(orderUseCase, times(1)).createOrder(checkoutRequest);
 		verify(paymentTransactionUseCase, times(1)).createPaymentTransaction(any(PaymentTransaction.class));

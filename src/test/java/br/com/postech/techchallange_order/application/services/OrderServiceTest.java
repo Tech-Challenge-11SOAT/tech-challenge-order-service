@@ -33,21 +33,7 @@ class OrderServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		checkoutRequest = new CheckoutRequest();
-		checkoutRequest.setIdCliente("customer-123");
-		checkoutRequest.setMetodoPagamento("PIX");
-
-		CheckoutRequest.ItemProduto item1 = new CheckoutRequest.ItemProduto();
-		item1.setIdProduto(1L);
-		item1.setQuantidade(2);
-		item1.setPrecoUnitario(BigDecimal.valueOf(50));
-
-		CheckoutRequest.ItemProduto item2 = new CheckoutRequest.ItemProduto();
-		item2.setIdProduto(2L);
-		item2.setQuantidade(1);
-		item2.setPrecoUnitario(BigDecimal.valueOf(100));
-
-		checkoutRequest.setProdutos(Arrays.asList(item1, item2));
+		checkoutRequest = OrderMother.createCheckoutRequest();
 	}
 
 	@Test
@@ -201,7 +187,7 @@ class OrderServiceTest {
 		item.setIdProduto(1L);
 		item.setQuantidade(0);
 		item.setPrecoUnitario(BigDecimal.TEN);
-		checkoutRequest.setProdutos(Arrays.asList(item));
+		checkoutRequest.setProdutos(Collections.singletonList(item));
 
 		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
 			orderService.createOrder(checkoutRequest)
@@ -217,7 +203,7 @@ class OrderServiceTest {
 		item.setIdProduto(1L);
 		item.setQuantidade(-1);
 		item.setPrecoUnitario(BigDecimal.TEN);
-		checkoutRequest.setProdutos(Arrays.asList(item));
+		checkoutRequest.setProdutos(Collections.singletonList(item));
 
 		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
 			orderService.createOrder(checkoutRequest)
@@ -284,7 +270,7 @@ class OrderServiceTest {
 		item.setIdProduto(1L);
 		item.setQuantidade(3);
 		item.setPrecoUnitario(BigDecimal.valueOf(25.50));
-		checkoutRequest.setProdutos(Arrays.asList(item));
+		checkoutRequest.setProdutos(Collections.singletonList(item));
 
 		orderService.createOrder(checkoutRequest);
 

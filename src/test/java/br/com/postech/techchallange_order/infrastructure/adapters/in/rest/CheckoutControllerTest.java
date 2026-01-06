@@ -1,6 +1,7 @@
 package br.com.postech.techchallange_order.infrastructure.adapters.in.rest;
 
 import br.com.postech.techchallange_order.domain.ports.in.CheckouUseCase;
+import br.com.postech.techchallange_order.helpers.OrderMother;
 import br.com.postech.techchallange_order.infrastructure.adapters.in.rest.dto.CheckoutRequest;
 import br.com.postech.techchallange_order.infrastructure.adapters.in.rest.dto.response.CheckoutResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -23,12 +25,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CheckoutController.class)
 class CheckoutControllerTest {
 
+    @SuppressWarnings("unused")
     @Autowired
     private MockMvc mockMvc;
 
+    @SuppressWarnings("unused")
     @Autowired
     private ObjectMapper objectMapper;
 
+    @SuppressWarnings("unused")
     @MockitoBean
     private CheckouUseCase checkoutUseCase;
 
@@ -37,15 +42,7 @@ class CheckoutControllerTest {
 
     @BeforeEach
     void setUp() {
-        checkoutRequest = new CheckoutRequest();
-        checkoutRequest.setIdCliente("customer-123");
-        checkoutRequest.setMetodoPagamento("PIX");
-
-        CheckoutRequest.ItemProduto item = new CheckoutRequest.ItemProduto();
-        item.setIdProduto(1L);
-        item.setQuantidade(2);
-        item.setPrecoUnitario(BigDecimal.valueOf(50));
-        checkoutRequest.setProdutos(Arrays.asList(item));
+        checkoutRequest = OrderMother.createCheckoutRequest();
 
         checkoutResponse = new CheckoutResponse();
         checkoutResponse.setIdPedido("order-123");

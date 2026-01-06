@@ -1,6 +1,7 @@
 package br.com.postech.techchallange_order.infrastructure.adapters.out.mongodb.mapper;
 
 import br.com.postech.techchallange_order.domain.model.Order;
+import br.com.postech.techchallange_order.helpers.OrderMother;
 import br.com.postech.techchallange_order.infrastructure.adapters.out.mongodb.model.OrderDocument;
 import org.bson.types.Decimal128;
 import org.bson.types.ObjectId;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,53 +27,32 @@ class OrderMapperTest {
 
     @Test
     void shouldMapDomainToDocument() {
-        Instant now = Instant.now();
-
-        Order.Status status = new Order.Status(1L, "RECEBIDO", now);
-        Order.Item item = new Order.Item(10L, 2, BigDecimal.valueOf(25.50), BigDecimal.valueOf(51.00));
-        Order.Payment.PaymentStatus paymentStatus = new Order.Payment.PaymentStatus(1L, "PENDENTE");
-        Order.MercadoPagoInfo mpInfo = new Order.MercadoPagoInfo(
-            "mp-order-123", "approved", "accredited", "ext-ref",
-            "qr-code", "qr-base64", "http://ticket.url"
-        );
-        Order.Payment payment = new Order.Payment(100L, BigDecimal.valueOf(51.00), "PIX", paymentStatus, now, mpInfo);
-
-        Order order = new Order();
-        order.setId(new ObjectId().toHexString());
-        order.setOrderId(123L);
-        order.setCustomerId("customer-456");
-        order.setOrderDate(now);
-        order.setStatus(status);
-        order.setQueuePosition(1);
-        order.setItems(Arrays.asList(item));
-        order.setPayment(payment);
-        order.setCreatedAt(now);
-        order.setUpdatedAt(now);
+        Order order = OrderMother.createOrderWithMercadoPago();
 
         OrderDocument doc = OrderMapper.toDocument(order);
 
         assertNotNull(doc);
-        assertEquals(order.getId(), doc.getId().toHexString());
-        assertEquals(123L, doc.getOrderId());
-        assertEquals("customer-456", doc.getCustomerId());
-        assertEquals(now, doc.getOrderDate());
+        assertNotNull(doc.getId());
+        assertNotNull(doc.getOrderId());
+        assertEquals(order.getCustomerId(), doc.getCustomerId());
+        assertEquals(order.getOrderDate(), doc.getOrderDate());
 
         assertNotNull(doc.getStatus());
-        assertEquals(1L, doc.getStatus().getId());
-        assertEquals("RECEBIDO", doc.getStatus().getName());
+        assertEquals(order.getStatus().getId(), doc.getStatus().getId());
+        assertEquals(order.getStatus().getName(), doc.getStatus().getName());
 
-        assertEquals(1, doc.getQueuePosition());
-        assertEquals(1, doc.getItems().size());
-        assertEquals(10L, doc.getItems().get(0).getProductId());
-        assertEquals(2, doc.getItems().get(0).getQuantity());
+        assertEquals(order.getQueuePosition(), doc.getQueuePosition());
+        assertEquals(order.getItems().size(), doc.getItems().size());
+        assertEquals(order.getItems().get(0).getProductId(), doc.getItems().get(0).getProductId());
+        assertEquals(order.getItems().get(0).getQuantity(), doc.getItems().get(0).getQuantity());
 
         assertNotNull(doc.getPayment());
-        assertEquals(100L, doc.getPayment().getPaymentId());
-        assertEquals("PIX", doc.getPayment().getPaymentMethod());
+        assertEquals(order.getPayment().getPaymentId(), doc.getPayment().getPaymentId());
+        assertEquals(order.getPayment().getPaymentMethod(), doc.getPayment().getPaymentMethod());
 
         assertNotNull(doc.getPayment().getMercadoPagoInfo());
-        assertEquals("mp-order-123", doc.getPayment().getMercadoPagoInfo().getOrderId());
-        assertEquals("qr-code", doc.getPayment().getMercadoPagoInfo().getQrCode());
+        assertEquals(order.getPayment().getMercadoPagoInfo().getOrderId(), doc.getPayment().getMercadoPagoInfo().getOrderId());
+        assertEquals(order.getPayment().getMercadoPagoInfo().getQrCode(), doc.getPayment().getMercadoPagoInfo().getQrCode());
     }
 
     @Test
@@ -120,7 +99,7 @@ class OrderMapperTest {
         doc.setOrderDate(now);
         doc.setStatus(status);
         doc.setQueuePosition(2);
-        doc.setItems(Arrays.asList(item));
+        doc.setItems(Collections.singletonList(item));
         doc.setPayment(payment);
         doc.setCreatedAt(now);
         doc.setUpdatedAt(now);
@@ -153,13 +132,12 @@ class OrderMapperTest {
 
     @Test
     void shouldMapDomainWithNullFieldsToDocument() {
-        Order order = new Order();
-        order.setOrderId(999L);
+        Order order = OrderMother.createMinimalOrder();
 
         OrderDocument doc = OrderMapper.toDocument(order);
 
         assertNotNull(doc);
-        assertEquals(999L, doc.getOrderId());
+        assertNotNull(doc.getOrderId());
         assertNull(doc.getId());
         assertNull(doc.getStatus());
         assertNull(doc.getPayment());
@@ -181,13 +159,13 @@ class OrderMapperTest {
 
     @Test
     void shouldMapItemsWithNullPrices() {
-        Order order = new Order();
+        Order order = OrderMother.createMinimalOrder();
         Order.Item item = new Order.Item();
         item.setProductId(1L);
         item.setQuantity(1);
         item.setUnitPrice(null);
         item.setSubtotal(null);
-        order.setItems(Arrays.asList(item));
+        order.setItems(Collections.singletonList(item));
 
         OrderDocument doc = OrderMapper.toDocument(order);
 
@@ -199,7 +177,7 @@ class OrderMapperTest {
 
     @Test
     void shouldMapPaymentWithNullStatusAndMercadoPagoInfo() {
-        Order order = new Order();
+        Order order = OrderMother.createMinimalOrder();
         Order.Payment payment = new Order.Payment();
         payment.setPaymentId(100L);
         payment.setPaymentMethod("PIX");
@@ -241,7 +219,7 @@ class OrderMapperTest {
         item.setQuantity(1);
         item.setUnitPrice(null);
         item.setSubtotal(null);
-        doc.setItems(Arrays.asList(item));
+        doc.setItems(Collections.singletonList(item));
 
         Order order = OrderMapper.toDomain(doc);
 

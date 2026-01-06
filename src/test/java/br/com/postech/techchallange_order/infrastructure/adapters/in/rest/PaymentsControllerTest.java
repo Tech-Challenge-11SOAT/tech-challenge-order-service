@@ -22,12 +22,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(PaymentsController.class)
 class PaymentsControllerTest {
 
+	@SuppressWarnings("unused")
 	@Autowired
 	private MockMvc mockMvc;
 
+	@SuppressWarnings("unused")
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	@SuppressWarnings("unused")
 	@MockitoBean
 	private PaymentUseCase paymentUseCase;
 
