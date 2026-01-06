@@ -1,7 +1,6 @@
 package br.com.postech.techchallange_order.application.services;
 
 import br.com.postech.techchallange_order.domain.enums.StatusPagamentoEnum;
-import br.com.postech.techchallange_order.domain.enums.StatusPedidoEnum;
 import br.com.postech.techchallange_order.domain.model.Order;
 import br.com.postech.techchallange_order.domain.model.PaymentTransaction;
 import br.com.postech.techchallange_order.domain.ports.in.OrderStatusHistoryUseCase;
@@ -17,9 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.math.BigDecimal;
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
