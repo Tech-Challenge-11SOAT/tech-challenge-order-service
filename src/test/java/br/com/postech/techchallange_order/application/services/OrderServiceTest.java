@@ -4,6 +4,7 @@ import br.com.postech.techchallange_order.domain.enums.StatusPagamentoEnum;
 import br.com.postech.techchallange_order.domain.enums.StatusPedidoEnum;
 import br.com.postech.techchallange_order.domain.model.Order;
 import br.com.postech.techchallange_order.domain.ports.out.OrderRepositoryPort;
+import br.com.postech.techchallange_order.helpers.OrderMother;
 import br.com.postech.techchallange_order.infrastructure.adapters.in.rest.dto.CheckoutRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,33 +77,35 @@ class OrderServiceTest {
 
 	@Test
 	void shouldMapItemsCorrectly() {
+		CheckoutRequest multiItemRequest = OrderMother.createCheckoutRequestWithMultipleItems();
 		Order savedOrder = new Order();
 		when(orderRepository.save(any(Order.class))).thenReturn(savedOrder);
 
-		orderService.createOrder(checkoutRequest);
+		orderService.createOrder(multiItemRequest);
 
 		verify(orderRepository).save(argThat(order ->
 			order.getItems().size() == 2 &&
 			order.getItems().get(0).getProductId() == 1L &&
 			order.getItems().get(0).getQuantity() == 2 &&
-			order.getItems().get(0).getUnitPrice().equals(BigDecimal.valueOf(50)) &&
-			order.getItems().get(0).getSubtotal().equals(BigDecimal.valueOf(100)) &&
+			order.getItems().get(0).getUnitPrice().compareTo(BigDecimal.valueOf(50)) == 0 &&
+			order.getItems().get(0).getSubtotal().compareTo(BigDecimal.valueOf(100)) == 0 &&
 			order.getItems().get(1).getProductId() == 2L &&
 			order.getItems().get(1).getQuantity() == 1 &&
-			order.getItems().get(1).getUnitPrice().equals(BigDecimal.valueOf(100)) &&
-			order.getItems().get(1).getSubtotal().equals(BigDecimal.valueOf(100))
+			order.getItems().get(1).getUnitPrice().compareTo(BigDecimal.valueOf(100)) == 0 &&
+			order.getItems().get(1).getSubtotal().compareTo(BigDecimal.valueOf(100)) == 0
 		));
 	}
 
 	@Test
 	void shouldCalculateTotalAmountCorrectly() {
+		CheckoutRequest multiItemRequest = OrderMother.createCheckoutRequestWithMultipleItems();
 		Order savedOrder = new Order();
 		when(orderRepository.save(any(Order.class))).thenReturn(savedOrder);
 
-		orderService.createOrder(checkoutRequest);
+		orderService.createOrder(multiItemRequest);
 
 		verify(orderRepository).save(argThat(order ->
-			order.getPayment().getTotalAmount().equals(BigDecimal.valueOf(200))
+			order.getPayment().getTotalAmount().compareTo(BigDecimal.valueOf(200)) == 0
 		));
 	}
 

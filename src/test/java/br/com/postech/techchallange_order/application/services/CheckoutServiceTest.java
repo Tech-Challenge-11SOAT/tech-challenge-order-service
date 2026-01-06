@@ -133,9 +133,9 @@ class CheckoutServiceTest {
 		checkoutService.processarCheckout(checkoutRequest);
 
 		verify(paymentTransactionUseCase, times(1)).createPaymentTransaction(argThat(transaction ->
-			transaction.getOrderId().equals("order-123") &&
-			transaction.getAmount().equals(BigDecimal.valueOf(100)) &&
-			transaction.getPaymentMethod().equals("PIX") &&
+			transaction.getOrderId().equals(order.getId()) &&
+			transaction.getAmount().equals(order.getPayment().getTotalAmount()) &&
+			transaction.getPaymentMethod().equals(order.getPayment().getPaymentMethod()) &&
 			transaction.getStatus().equals(StatusPagamentoEnum.PENDENTE.getStatus()) &&
 			transaction.getCreatedAt() != null
 		));
