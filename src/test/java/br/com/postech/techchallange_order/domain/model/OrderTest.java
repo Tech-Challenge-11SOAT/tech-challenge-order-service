@@ -1,13 +1,15 @@
 package br.com.postech.techchallange_order.domain.model;
 
-import org.junit.jupiter.api.Test;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
 
 class OrderTest {
 
@@ -41,6 +43,20 @@ class OrderTest {
         assertEquals(1, order.getQueuePosition());
         assertEquals(1, order.getItems().size());
         assertEquals(payment, order.getPayment());
+    }
+
+    @Test
+    void shouldCreateOrderWithNullItemsInConstructor() {
+        Instant now = Instant.now();
+        Order.Status status = new Order.Status(1L, "RECEBIDO", now);
+        Order.Payment payment = new Order.Payment();
+
+        Order order = new Order("123", 456L, "customer1", now, status, 1, null, payment, now, now);
+
+        assertEquals("123", order.getId());
+        assertEquals(456L, order.getOrderId());
+        assertNotNull(order.getItems());
+        assertTrue(order.getItems().isEmpty());
     }
 
     @Test
@@ -304,9 +320,8 @@ class OrderTest {
     @Test
     void shouldCreateMercadoPagoInfoWithAllArgsConstructor() {
         Order.MercadoPagoInfo info = new Order.MercadoPagoInfo(
-            "mp-order-123", "approved", "accredited", "ref-456",
-            "qr-code-data", "qr-base64", "http://ticket.url"
-        );
+                "mp-order-123", "approved", "accredited", "ref-456",
+                "qr-code-data", "qr-base64", "http://ticket.url");
 
         assertEquals("mp-order-123", info.getOrderId());
         assertEquals("approved", info.getStatus());
@@ -338,4 +353,3 @@ class OrderTest {
         assertEquals("http://example.com/ticket", info.getTicketUrl());
     }
 }
-

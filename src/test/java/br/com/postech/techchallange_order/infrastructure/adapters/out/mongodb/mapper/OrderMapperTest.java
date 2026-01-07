@@ -1,17 +1,21 @@
 package br.com.postech.techchallange_order.infrastructure.adapters.out.mongodb.mapper;
 
-import br.com.postech.techchallange_order.domain.model.Order;
-import br.com.postech.techchallange_order.helpers.OrderMother;
-import br.com.postech.techchallange_order.infrastructure.adapters.out.mongodb.model.OrderDocument;
-import org.bson.types.Decimal128;
-import org.bson.types.ObjectId;
-import org.junit.jupiter.api.Test;
-
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.bson.types.Decimal128;
+import org.bson.types.ObjectId;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import br.com.postech.techchallange_order.domain.model.Order;
+import br.com.postech.techchallange_order.helpers.OrderMother;
+import br.com.postech.techchallange_order.infrastructure.adapters.out.mongodb.model.OrderDocument;
 
 class OrderMapperTest {
 
@@ -51,8 +55,10 @@ class OrderMapperTest {
         assertEquals(order.getPayment().getPaymentMethod(), doc.getPayment().getPaymentMethod());
 
         assertNotNull(doc.getPayment().getMercadoPagoInfo());
-        assertEquals(order.getPayment().getMercadoPagoInfo().getOrderId(), doc.getPayment().getMercadoPagoInfo().getOrderId());
-        assertEquals(order.getPayment().getMercadoPagoInfo().getQrCode(), doc.getPayment().getMercadoPagoInfo().getQrCode());
+        assertEquals(order.getPayment().getMercadoPagoInfo().getOrderId(),
+                doc.getPayment().getMercadoPagoInfo().getOrderId());
+        assertEquals(order.getPayment().getMercadoPagoInfo().getQrCode(),
+                doc.getPayment().getMercadoPagoInfo().getQrCode());
     }
 
     @Test
@@ -228,5 +234,76 @@ class OrderMapperTest {
         assertNull(order.getItems().get(0).getUnitPrice());
         assertNull(order.getItems().get(0).getSubtotal());
     }
-}
 
+    @Test
+    void shouldMapDomainWithNullItemsToDocument() {
+        Order order = new Order();
+        order.setOrderId(123L);
+        order.setItems(null); // setItems converte null para ArrayList vazia
+
+        OrderDocument doc = OrderMapper.toDocument(order);
+
+        assertNotNull(doc);
+        // Como Order.setItems converte null para lista vazia, doc.getItems() também
+        // será vazia
+        assertNotNull(doc.getItems());
+        assertTrue(doc.getItems().isEmpty());
+    }
+
+    @Test
+    void shouldMapDomainWithEmptyItemsToDocument() {
+        Order order = new Order();
+        order.setOrderId(456L);
+        order.setItems(Collections.emptyList());
+
+        OrderDocument doc = OrderMapper.toDocument(order);
+
+        assertNotNull(doc);
+        assertNotNull(doc.getItems());
+        assertTrue(doc.getItems().isEmpty());
+    }
+
+    @Test
+    void shouldMapDocumentWithNullItemsToDomain() {
+        OrderDocument doc = new OrderDocument();
+        doc.setOrderId(999L);
+        doc.setItems(null);
+
+        Order order = OrderMapper.toDomain(doc);
+
+        assertNotNull(order);
+        assertEquals(999L, order.getOrderId());
+        assertNotNull(order.getItems());
+        assertTrue(order.getItems().isEmpty());
+    }
+
+    @Test
+    void shouldMapDocumentWithEmptyItemsToDomain() {
+        OrderDocument doc = new OrderDocument();
+        doc.setOrderId(777L);
+        doc.setItems(Collections.emptyList());
+
+        Order order = OrderMapper.toDomain(doc);
+
+        assertNotNull(order);
+        assertEquals(777L, order.getOrderId());
+        assertNotNull(order.getItems());
+        assertTrue(order.getItems().isEmpty());
+    }
+
+    @Test
+    void shouldHandleReallyNullItemsInDomain() throws Exception {
+        // Usa reflection para forçar items = null, contornando o setter
+        Order order = new Order();
+        order.setOrderId(321L);
+
+        Field itemsField = Order.class.getDeclaredField("items");
+        itemsField.setAccessible(true);
+        itemsField.set(order, null);
+
+        OrderDocument doc = OrderMapper.toDocument(order);
+
+        assertNotNull(doc);
+        assertNull(doc.getItems());
+    }
+}
