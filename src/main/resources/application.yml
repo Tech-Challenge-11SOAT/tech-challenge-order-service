@@ -1,0 +1,51 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: techchallange-order
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/techchallenge-order}
+
+mongodb:
+  uri: ${MONGODB_URI:mongodb://localhost:27017/techchallenge-order}
+  database: ${MONGODB_DATABASE:tc-order}
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:https://tech-challenge-front.vercel.app,http://localhost:5173}
+  allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PUT,DELETE,OPTIONS}
+  allowed-headers: ${CORS_ALLOWED_HEADERS:*}
+  allow-credentials: true
+  max-age: 3600
+
+customer:
+  service:
+    url: ${CUSTOMER_SERVICE_URL:http://localhost:8080}
+
+jwt:
+  secret: ${JWT_SECRET:palmeirasNaoTemMundialVitorNhoqueEMuitoBagreVaiCorinthians2012}
+  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:900000}
+  refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:604800000}
+
+mercadopago:
+  api:
+    base-url: https://api.mercadopago.com
+    access-token: ${MERCADOPAGO_ACCESS_TOKEN:APP_USR-8362092309191946-080212-d4d6894b10825ad1772ebb4b35b7d804-2594773237}
+    public-key: ${MERCADOPAGO_PUBLIC_KEY:TEST-7c47deeb-29c4-4eee-b120-f808731c9f23}
+    user-id: ${MERCADOPAGO_USER_ID:TEST_USER_ID}
+    pos-id: ${MERCADOPAGO_POS_ID:SUC001POS001}
+    timeout: ${MERCADOPAGO_TIMEOUT:30000}
+  options:
+    test-mode: false
+    integration-active: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true

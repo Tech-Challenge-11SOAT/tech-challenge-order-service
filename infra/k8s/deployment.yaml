@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tech-challenge-order-service 
+  namespace: techchallenge
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: order-service 
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: order-service 
+    spec:
+      containers:
+        - name: order-service 
+          image: nicolasmartinss/order-service:${{ github.sha }} 
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          envFrom:
+            - configMapRef:
+                name: order-service-config
+            - secretRef:
+                name: order-service-secret
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+          livenessProbe:
+            httpGet:
+              port: 8081
+              path: /actuator/health
+            initialDelaySeconds: 5
+            periodSeconds: 20
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              port: 8081
+              path: /actuator/health
+            initialDelaySeconds: 3
+            periodSeconds: 4
+            failureThreshold: 3
+            successThreshold: 2
+            timeoutSeconds: 5
+          startupProbe:
+            httpGet:
+              port: 8081
+              path: /actuator/health
+            failureThreshold: 30
+            periodSeconds: 10
+            timeoutSeconds: 5

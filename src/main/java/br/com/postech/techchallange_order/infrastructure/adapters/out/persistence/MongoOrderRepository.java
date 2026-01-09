@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import br.com.postech.techchallange_order.infrastructure.adapters.out.mongodb.model.OrderDocument;
 
 @Repository
-public interface OrderMongoRepository extends MongoRepository<OrderDocument, ObjectId> {
+public interface MongoOrderRepository extends MongoRepository<OrderDocument, ObjectId> {
 }
