@@ -57,12 +57,12 @@ jobs:
         run: |
           kubectl create secret generic order-service-secret \
             --namespace techchallenge \
-            --from-literal=SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }} \
-            --from-literal=JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            --from-literal=MERCADOPAGO_ACCESS_TOKEN=${{ secrets.MERCADOPAGO_ACCESS_TOKEN }} \
-            --from-literal=MERCADOPAGO_PUBLIC_KEY=${{ secrets.MERCADOPAGO_PUBLIC_KEY }} \
-            --from-literal=MERCADOPAGO_USER_ID=${{ secrets.MERCADOPAGO_USER_ID }} \
-            --from-literal=MERCADOPAGO_POS_ID=${{ secrets.MERCADOPAGO_POS_ID }} \
+            --from-literal=MONGODB_URI="${{ secrets.MONGODB_URI }}" \
+            --from-literal=JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+            --from-literal=MERCADOPAGO_ACCESS_TOKEN="${{ secrets.MERCADOPAGO_ACCESS_TOKEN }}" \
+            --from-literal=MERCADOPAGO_PUBLIC_KEY="${{ secrets.MERCADOPAGO_PUBLIC_KEY }}" \
+            --from-literal=MERCADOPAGO_USER_ID="${{ secrets.MERCADOPAGO_USER_ID }}" \
+            --from-literal=MERCADOPAGO_POS_ID="${{ secrets.MERCADOPAGO_POS_ID }}" \
             --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Atualizar Deployment com nova imagem
