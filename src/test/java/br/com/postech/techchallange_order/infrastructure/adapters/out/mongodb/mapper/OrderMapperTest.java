@@ -304,6 +304,9 @@ class OrderMapperTest {
         OrderDocument doc = OrderMapper.toDocument(order);
 
         assertNotNull(doc);
-        assertNull(doc.getItems());
+        // Com getItems() retornando lista vazia quando items é null,
+        // o mapper vai criar uma lista vazia no documento
+        assertNotNull(doc.getItems());
+        assertTrue(doc.getItems().isEmpty());
     }
 }

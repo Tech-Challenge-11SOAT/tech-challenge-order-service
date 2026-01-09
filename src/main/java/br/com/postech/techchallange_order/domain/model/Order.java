@@ -86,7 +86,7 @@ public class Order {
 	}
 
 	public List<Item> getItems() {
-		return new ArrayList<>(items);
+		return items != null ? new ArrayList<>(items) : new ArrayList<>();
 	}
 
 	public void setItems(List<Item> items) {
