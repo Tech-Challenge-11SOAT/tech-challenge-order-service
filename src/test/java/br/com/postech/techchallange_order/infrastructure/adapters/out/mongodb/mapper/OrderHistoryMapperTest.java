@@ -3,10 +3,7 @@ package br.com.postech.techchallange_order.infrastructure.adapters.out.mongodb.m
 import br.com.postech.techchallange_order.domain.model.Order;
 import br.com.postech.techchallange_order.helpers.OrderMother;
 import br.com.postech.techchallange_order.infrastructure.adapters.out.mongodb.model.OrderHistoryDocument;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
-
-import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -87,4 +84,3 @@ class OrderHistoryMapperTest {
         assertEquals(previousStatus.getId(), doc.getPreviousStatus().getId());
     }
 }
-

@@ -1,0 +1,31 @@
+# Spring Profile para testes BDD
+spring:
+  application:
+    name: techchallange-order-test
+  
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/techchallenge-order-test
+      database: tc-order-test
+
+mongodb:
+  uri: mongodb://localhost:27017/techchallenge-order-test
+  database: tc-order-test
+
+# Configurações do Mercado Pago para testes
+mercadopago:
+  api:
+    base-url: https://api.mercadopago.com
+    access-token: TEST-token
+    public-key: TEST-public-key
+    timeout: 30000
+  options:
+    test-mode: true
+    integration-active: false
+
+# Logging
+logging:
+  level:
+    root: INFO
+    br.com.postech.techchallange_order: DEBUG
+    io.cucumber: DEBUG

@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -88,4 +87,3 @@ class MongoQueueAdapterTest {
         verify(mapper, times(1)).toDomain(docWithoutCustomer);
     }
 }
-
