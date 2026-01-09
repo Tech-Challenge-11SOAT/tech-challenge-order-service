@@ -52,6 +52,9 @@ jobs:
       - name: Rodar testes + gerar coverage (JaCoCo)
         run: mvn -B clean verify
 
+      - name: Verificar jacoco.xml
+        run: ls -la target/site/jacoco/jacoco.xml
+
       - name: Upload dos resultados dos testes
         uses: actions/upload-artifact@v4
         if: always()
