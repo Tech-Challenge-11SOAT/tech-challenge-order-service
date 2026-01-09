@@ -26,14 +26,25 @@ class OrderTest {
     }
 
     @Test
-    void shouldCreateOrderWithAllArgsConstructor() {
+    void shouldCreateOrderWithBuilder() {
         Instant now = Instant.now();
         Order.Status status = new Order.Status(1L, "RECEBIDO", now);
         Order.Item item = new Order.Item(1L, 2, BigDecimal.TEN, BigDecimal.valueOf(20));
         List<Order.Item> items = Collections.singletonList(item);
         Order.Payment payment = new Order.Payment();
 
-        Order order = new Order("123", 456L, "customer1", now, status, 1, items, payment, now, now);
+        Order order = Order.builder()
+                .id("123")
+                .orderId(456L)
+                .customerId("customer1")
+                .orderDate(now)
+                .status(status)
+                .queuePosition(1)
+                .items(items)
+                .payment(payment)
+                .createdAt(now)
+                .updatedAt(now)
+                .build();
 
         assertEquals("123", order.getId());
         assertEquals(456L, order.getOrderId());
@@ -43,15 +54,28 @@ class OrderTest {
         assertEquals(1, order.getQueuePosition());
         assertEquals(1, order.getItems().size());
         assertEquals(payment, order.getPayment());
+        assertEquals(now, order.getCreatedAt());
+        assertEquals(now, order.getUpdatedAt());
     }
 
     @Test
-    void shouldCreateOrderWithNullItemsInConstructor() {
+    void shouldCreateOrderWithNullItemsInBuilder() {
         Instant now = Instant.now();
         Order.Status status = new Order.Status(1L, "RECEBIDO", now);
         Order.Payment payment = new Order.Payment();
 
-        Order order = new Order("123", 456L, "customer1", now, status, 1, null, payment, now, now);
+        Order order = Order.builder()
+                .id("123")
+                .orderId(456L)
+                .customerId("customer1")
+                .orderDate(now)
+                .status(status)
+                .queuePosition(1)
+                .items(null)
+                .payment(payment)
+                .createdAt(now)
+                .updatedAt(now)
+                .build();
 
         assertEquals("123", order.getId());
         assertEquals(456L, order.getOrderId());
@@ -351,5 +375,70 @@ class OrderTest {
         assertEquals("qr-data", info.getQrCode());
         assertEquals("base64-data", info.getQrCodeBase64());
         assertEquals("http://example.com/ticket", info.getTicketUrl());
+    }
+
+    @Test
+    void shouldBuildOrderWithAllBuilderMethods() {
+        Instant now = Instant.now();
+        Order.Status status = new Order.Status(1L, "RECEBIDO", now);
+        Order.Item item = new Order.Item(1L, 2, BigDecimal.TEN, BigDecimal.valueOf(20));
+        List<Order.Item> items = Collections.singletonList(item);
+        Order.Payment payment = new Order.Payment();
+
+        Order.Builder builder = Order.builder();
+
+        Order order = builder
+                .id("test-id")
+                .orderId(100L)
+                .customerId("cust-123")
+                .orderDate(now)
+                .status(status)
+                .queuePosition(5)
+                .items(items)
+                .payment(payment)
+                .createdAt(now)
+                .updatedAt(now)
+                .build();
+
+        assertNotNull(order);
+        assertEquals("test-id", order.getId());
+        assertEquals(100L, order.getOrderId());
+        assertEquals("cust-123", order.getCustomerId());
+        assertEquals(now, order.getOrderDate());
+        assertEquals(status, order.getStatus());
+        assertEquals(5, order.getQueuePosition());
+        assertEquals(items, order.getItems());
+        assertEquals(payment, order.getPayment());
+        assertEquals(now, order.getCreatedAt());
+        assertEquals(now, order.getUpdatedAt());
+    }
+
+    @Test
+    void shouldBuildOrderWithMinimalFields() {
+        Order order = Order.builder().build();
+
+        assertNotNull(order);
+        assertNull(order.getId());
+        assertNull(order.getOrderId());
+        assertNull(order.getCustomerId());
+        assertNotNull(order.getItems());
+        assertTrue(order.getItems().isEmpty());
+    }
+
+    @Test
+    void shouldReturnBuilderInstanceOnEachBuilderMethod() {
+        Instant now = Instant.now();
+        Order.Builder builder = Order.builder();
+
+        assertNotNull(builder.id("test"));
+        assertNotNull(builder.orderId(1L));
+        assertNotNull(builder.customerId("customer"));
+        assertNotNull(builder.orderDate(now));
+        assertNotNull(builder.status(new Order.Status()));
+        assertNotNull(builder.queuePosition(1));
+        assertNotNull(builder.items(Collections.emptyList()));
+        assertNotNull(builder.payment(new Order.Payment()));
+        assertNotNull(builder.createdAt(now));
+        assertNotNull(builder.updatedAt(now));
     }
 }
