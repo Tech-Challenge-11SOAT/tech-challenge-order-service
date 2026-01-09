@@ -1,6 +1,7 @@
 package br.com.postech.techchallange_order;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -94,12 +95,12 @@ class TechchallangeOrderApplicationTest {
 		// Verifica se a classe possui a anotação @SpringBootApplication
 		boolean hasSpringBootApplication = TechchallangeOrderApplication.class
 				.isAnnotationPresent(org.springframework.boot.autoconfigure.SpringBootApplication.class);
-		assertNotNull(hasSpringBootApplication, "A classe deve ter a anotação @SpringBootApplication");
+		assertTrue(hasSpringBootApplication, "A classe deve ter a anotação @SpringBootApplication");
 
 		// Verifica se a classe possui a anotação @EnableFeignClients
 		boolean hasEnableFeignClients = TechchallangeOrderApplication.class
 				.isAnnotationPresent(org.springframework.cloud.openfeign.EnableFeignClients.class);
-		assertNotNull(hasEnableFeignClients, "A classe deve ter a anotação @EnableFeignClients");
+		assertTrue(hasEnableFeignClients, "A classe deve ter a anotação @EnableFeignClients");
 	}
 
 	/**

@@ -32,7 +32,6 @@ public class MercadoPagoAdapter implements PaymentGatewayPort {
 	private Boolean integrationActive;
 
 	private final MercadoPagoFeignClient mercadoPagoFeignClient;
-	// private final MercadoPagoOptionsConfig mercadoPagoOptionsConfig;
 
 	@Override
 	public Order createPaymentOrder(Order order, String payerEmail) {
@@ -102,11 +101,8 @@ public class MercadoPagoAdapter implements PaymentGatewayPort {
 				.email(payerEmail)
 				.build();
 
-		// if (mercadoPagoOptionsConfig.getOptions().getTestMode().equals(Boolean.TRUE))
-		// {
 		payer.setFirstName(MercadoPagoConstants.MERCADO_PAGO_FIRST_NAME);
 		payer.setEmail(MercadoPagoConstants.MERCADO_PAGO_TEST_EMAIL);
-		// }
 
 		return MercadoPagoOrderRequest.builder()
 				.type("online")

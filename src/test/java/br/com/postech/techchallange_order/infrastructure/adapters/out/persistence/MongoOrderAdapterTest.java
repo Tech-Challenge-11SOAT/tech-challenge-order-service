@@ -54,6 +54,8 @@ class MongoOrderAdapterTest {
         Order result = mongoOrderAdapter.save(order);
 
         assertNotNull(result);
+        assertEquals(order.getOrderId(), result.getOrderId());
+        assertEquals(order.getCustomerId(), result.getCustomerId());
         verify(repository, times(1)).save(any(OrderDocument.class));
     }
 
