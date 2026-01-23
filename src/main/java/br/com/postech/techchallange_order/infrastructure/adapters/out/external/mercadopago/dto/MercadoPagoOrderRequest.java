@@ -1,6 +1,5 @@
 package br.com.postech.techchallange_order.infrastructure.adapters.out.external.mercadopago.dto;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,55 +15,50 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MercadoPagoOrderRequest {
 
+	private String type;
+
+	@JsonProperty("total_amount")
+	private String totalAmount;
+
 	@JsonProperty("external_reference")
 	private String externalReference;
 
-	@JsonProperty("title")
-	private String title;
+	@JsonProperty("processing_mode")
+	private String processingMode;
 
-	@JsonProperty("description")
-	private String description;
+	private Transactions transactions;
 
-	@JsonProperty("notification_url")
-	private String notificationUrl;
-
-	@JsonProperty("total_amount")
-	private BigDecimal totalAmount;
-
-	@JsonProperty("items")
-	private List<Item> items;
-
-	@JsonProperty("payer")
 	private Payer payer;
 
 	@Data
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
-	public static class Item {
-		@JsonProperty("sku_number")
-		private String skuNumber;
+	public static class Transactions {
+		private List<Payment> payments;
+	}
 
-		@JsonProperty("category")
-		private String category;
+	@Data
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class Payment {
+		private String amount;
 
-		@JsonProperty("title")
-		private String title;
+		@JsonProperty("payment_method")
+		private PaymentMethod paymentMethod;
 
-		@JsonProperty("description")
-		private String description;
+		@JsonProperty("expiration_time")
+		private String expirationTime;
+	}
 
-		@JsonProperty("unit_price")
-		private BigDecimal unitPrice;
-
-		@JsonProperty("quantity")
-		private Integer quantity;
-
-		@JsonProperty("unit_measure")
-		private String unitMeasure;
-
-		@JsonProperty("total_amount")
-		private BigDecimal totalAmount;
+	@Data
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class PaymentMethod {
+		private String id;
+		private String type;
 	}
 
 	@Data
@@ -72,7 +66,10 @@ public class MercadoPagoOrderRequest {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class Payer {
-		@JsonProperty("email")
+
+		@JsonProperty("first_name")
+		private String firstName;
 		private String email;
 	}
+
 }

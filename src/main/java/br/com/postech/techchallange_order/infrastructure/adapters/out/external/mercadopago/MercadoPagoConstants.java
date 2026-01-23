@@ -8,7 +8,6 @@ import java.util.List;
 public final class MercadoPagoConstants {
 
 	private MercadoPagoConstants() {
-		// Classe utilitária - construtor privado
 	}
 
 	public static final String MERCADO_PAGO_FIRST_NAME = "APRO";

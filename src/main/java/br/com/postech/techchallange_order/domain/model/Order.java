@@ -20,18 +20,21 @@ public class Order {
 	public Order() {
 	}
 
-	public Order(String id, Long orderId, String customerId, Instant orderDate, Status status, Integer queuePosition,
-			List<Item> items, Payment payment, Instant createdAt, Instant updatedAt) {
-		this.id = id;
-		this.orderId = orderId;
-		this.customerId = customerId;
-		this.orderDate = orderDate;
-		this.status = status;
-		this.queuePosition = queuePosition;
-		this.items = items != null ? items : new ArrayList<>();
-		this.payment = payment;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
+	private Order(Builder builder) {
+		this.id = builder.id;
+		this.orderId = builder.orderId;
+		this.customerId = builder.customerId;
+		this.orderDate = builder.orderDate;
+		this.status = builder.status;
+		this.queuePosition = builder.queuePosition;
+		this.items = builder.items != null ? builder.items : new ArrayList<>();
+		this.payment = builder.payment;
+		this.createdAt = builder.createdAt;
+		this.updatedAt = builder.updatedAt;
+	}
+
+	public static Builder builder() {
+		return new Builder();
 	}
 
 	public String getId() {
@@ -83,7 +86,7 @@ public class Order {
 	}
 
 	public List<Item> getItems() {
-		return items;
+		return items != null ? new ArrayList<>(items) : new ArrayList<>();
 	}
 
 	public void setItems(List<Item> items) {
@@ -378,6 +381,73 @@ public class Order {
 
 		public void setTicketUrl(String ticketUrl) {
 			this.ticketUrl = ticketUrl;
+		}
+	}
+
+	public static class Builder {
+		private String id;
+		private Long orderId;
+		private String customerId;
+		private Instant orderDate;
+		private Status status;
+		private Integer queuePosition;
+		private List<Item> items;
+		private Payment payment;
+		private Instant createdAt;
+		private Instant updatedAt;
+
+		public Builder id(String id) {
+			this.id = id;
+			return this;
+		}
+
+		public Builder orderId(Long orderId) {
+			this.orderId = orderId;
+			return this;
+		}
+
+		public Builder customerId(String customerId) {
+			this.customerId = customerId;
+			return this;
+		}
+
+		public Builder orderDate(Instant orderDate) {
+			this.orderDate = orderDate;
+			return this;
+		}
+
+		public Builder status(Status status) {
+			this.status = status;
+			return this;
+		}
+
+		public Builder queuePosition(Integer queuePosition) {
+			this.queuePosition = queuePosition;
+			return this;
+		}
+
+		public Builder items(List<Item> items) {
+			this.items = items;
+			return this;
+		}
+
+		public Builder payment(Payment payment) {
+			this.payment = payment;
+			return this;
+		}
+
+		public Builder createdAt(Instant createdAt) {
+			this.createdAt = createdAt;
+			return this;
+		}
+
+		public Builder updatedAt(Instant updatedAt) {
+			this.updatedAt = updatedAt;
+			return this;
+		}
+
+		public Order build() {
+			return new Order(this);
 		}
 	}
 }
